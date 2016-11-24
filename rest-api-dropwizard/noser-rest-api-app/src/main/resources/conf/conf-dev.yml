@@ -1,0 +1,88 @@
+# use the simple server factory if you only want to run on a single port
+server:
+  type: simple
+  applicationContextPath: /api
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 8082
+  requestLog:
+     # http://logback.qos.ch/manual/layouts.html#AccessPatternLayout
+     # default format: %h %l %u [%t{dd/MMM/yyyy:HH:mm:ss Z,UTC}] "%r" %s %b "%i{Referer}" "%i{User-Agent}" %D
+     appenders:
+        - type: console
+          logFormat: "%h %u %i{X-User-ID} [%t{ISO8601,UTC}] \"%r\" %s %b \"%i{Referer}\" \"%i{User-Agent}\" %D"
+        - type: file
+          logFormat: "%h %u %i{X-User-ID} [%t{ISO8601,UTC}] \"%r\" %s %b \"%i{Referer}\" \"%i{User-Agent}\" %D"
+          currentLogFilename: ./target/logs/public-api-requestLog.log
+          archive: true
+          archivedLogFilenamePattern: ./target/logs/public-api-requestLog-%i.log
+          maxFileSize: 20MB
+          archivedFileCount: 5
+          timeZone: UTC
+
+webpageConfiguration:
+   originalWwwroot: target/classes/wwwroot
+   wwwroot: target/${MH_WWWROOT_PATH:-wwwroot}
+   
+swaggerDocumentation:
+   original: target/classes/apidocs
+   processed: target/${MH_WWWROOT_PATH:-wwwroot}/doc
+   placeholders:
+      - key: "{{tokenRequestEndpoint}}"
+        value: http://192.168.99.100:8550/auth/realms/EngineeringSitzung/protocol/openid-connect/auth
+      - key: "{{tokenEndpoint}}"
+        value: http://192.168.99.100:8550/auth/realms/EngineeringSitzung/protocol/openid-connect/token
+      - key: "{{docBasePath}}"
+        value: /api/doc
+      - key: "{{apiBasePath}}"
+        value: /api/api
+
+#Connect to dev
+keycloakConfiguration:
+   realm: EngineeringSitzung
+   auth-server-url: http://192.168.99.100:8550/auth
+   ssl-required: external
+   resource: noser-rest-api-dev-dw
+   bearer-only: true
+   credentials:
+      secret: secret
+
+logging:
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+  loggers:
+    ch.noser: DEBUG
+    io.dropwizard: INFO
+  appenders:
+    - type: console
+      logFormat: "%highlight(%-5level) %d{HH:mm:ss.SSS} [%t] %cyan(%logger{5}) %boldRed(%X{aggregateIdentifier:-:}): %msg%n%rEx"
+      queueSize: 2048
+    - type: file
+      threshold: DEBUG
+      logFormat: "%-5level %d [%t] %logger{5} %X{user-id-:}: %msg%n%rEx"
+      queueSize: 2048
+      currentLogFilename: ./target/logs/public-api-dev-DEBUG.log
+      archive: true
+      archivedLogFilenamePattern: ./target/logs/public-api-DEBUG-%i.log.gz
+      archivedFileCount: 5
+      maxFileSize: 20MB
+      timeZone: UTC
+    - type: file
+      threshold: INFO
+      logFormat: "%-5level %d [%t] %logger{5} %X{user-id-:}: %msg%n%rEx{2}"    
+      currentLogFilename: ./target/logs/public-api-INFO.log
+      archive: true
+      archivedLogFilenamePattern: ./target/logs/public-api-INFO-%i.log.gz
+      archivedFileCount: 5
+      maxFileSize: 20MB
+      timeZone: UTC
+    - type: file
+      threshold: ERROR
+      logFormat: "%-5level %d [%t] %logger{5} %X{user-id-:}: %msg%n%rEx"
+      currentLogFilename: ./target/logs/public-api-ERROR.log
+      archive: true
+      archivedLogFilenamePattern: ./target/logs/public-api-ERROR-%i.log.gz
+      archivedFileCount: 5
+      maxFileSize: 20MB
+      timeZone: UTC

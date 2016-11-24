@@ -1,0 +1,21 @@
+{
+   "oauth2": {
+      "type": "oauth2",
+      "scopes": [
+         {
+            "scope": "noser-user",
+            "description": "Standart Noser User"
+         }
+      ],
+      "grantTypes": {
+         "authorization_code": {
+            "tokenRequestEndpoint": {
+               "url": "{{tokenRequestEndpoint}}"
+            },
+            "tokenEndpoint": {
+               "url": "{{tokenEndpoint}}"
+            }
+         }
+      }
+   }
+}

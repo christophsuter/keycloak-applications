@@ -1,0 +1,61 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+   <id>bin</id>
+   <formats>
+      <format>dir</format>
+      <format>zip</format>
+   </formats>
+   <includeBaseDirectory>false</includeBaseDirectory>
+   <dependencySets>
+
+      <dependencySet>
+         <outputDirectory>/</outputDirectory>
+         <outputFileNameMapping>${project.build.finalName}.jar</outputFileNameMapping>
+         <unpack>false</unpack>
+         <useProjectArtifact>true</useProjectArtifact>
+         <useProjectAttachments>true</useProjectAttachments>
+         <useStrictFiltering>true</useStrictFiltering>
+         <includes>
+            <include>${project.groupId}:${project.artifactId}:jar:launcher</include>
+         </includes>
+      </dependencySet>
+      
+      <dependencySet>
+         <outputDirectory>/</outputDirectory>
+         <scope>provided</scope>
+         <includes>
+            <include>org.jolokia:jolokia-jvm:*:agent</include>
+         </includes>
+      </dependencySet>
+      
+   </dependencySets>
+   
+   <fileSets>
+      <fileSet>
+         <directory>src/main/resources/conf</directory>
+         <outputDirectory></outputDirectory>
+         <includes>
+            <include>conf-*.yml</include>
+         </includes>
+      </fileSet>
+      
+      <fileSet>
+         <directory>${basedir}/target/classes/apidocs</directory>
+         <outputDirectory>assets/apidocs-original</outputDirectory>
+         <includes>
+            <include>*.*</include>
+            <include>*/*.*</include>
+         </includes>
+      </fileSet>
+      
+      <fileSet>
+         <directory>${basedir}/target/classes/wwwroot</directory>
+         <outputDirectory>assets/wwwroot-original</outputDirectory>
+         <includes>
+            <include>*.*</include>
+            <include>*/*.*</include>
+         </includes>
+      </fileSet>
+   </fileSets>
+</assembly>
