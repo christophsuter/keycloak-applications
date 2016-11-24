@@ -26,7 +26,7 @@ werden. Da beim Startup die Prozess-ID (PID) in das lokale File `.pid` eingetrag
 
 ## Build
 
-$ mvn clean install -Pdistribution
+    $ mvn clean install -Pdistribution
 
 ## Run
 To start the application: 
@@ -42,4 +42,8 @@ Stop the application:
 
 ## Build
 
+    $ mvn clean install -Pdistribution
+
 ## Run
+
+    $ java -jar spring-keycloak-0.0.1-SNAPSHOT.jar
